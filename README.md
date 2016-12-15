@@ -29,7 +29,7 @@ const request = {
     name: 123
 };
 
-ensure(request, constraint); // throws an Error exception
+ensure(request, constraint); // throws an Error exception on name
 ```
 
 ## API
