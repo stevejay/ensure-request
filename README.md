@@ -7,6 +7,8 @@ Validation for API requests
 [![Coverage Status](https://coveralls.io/repos/github/stevejay/ensure-request/badge.svg?branch=master)](https://coveralls.io/github/stevejay/ensure-request?branch=master)
 [![dependency status](https://david-dm.org/stevejay/ensure-request.svg)](https://david-dm.org/stevejay/ensure-request)
 
+[![NPM](https://nodei.co/npm/ensure-request.png)](https://nodei.co/npm/ensure-request/)
+
 ## Install
 
 ```
