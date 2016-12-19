@@ -920,6 +920,23 @@ describe('ensure', function() {
 
         runTests(tests);
     });
+
+    describe('unknown constraint', function() {
+        it('should throw an error', function() {
+            const params = {
+                a: 'foo'
+            };
+
+            const constraint = {
+                a: {
+                    unknownConstraint: true
+                }
+            };
+
+            (() => ensure(params, constraint)).should.throw(
+                'Unknown constraint \'unknownConstraint\' specified');
+        });
+    });
 });
 
 function runTests(tests) {
