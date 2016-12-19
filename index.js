@@ -33,69 +33,65 @@ const walkConstraints = (parentPath, param, constraints, result) => {
         namesOfPropertiesToCheck.forEach(nameOfPropertyToCheck => {
             const namesOfConstraintsToApply = Object.keys(constraints[nameOfPropertyToCheck]);
 
-            if (!param.hasOwnProperty(nameOfPropertyToCheck) && constraints.presence) {
-                result.push(`Failed to find property '${nameOfPropertyToCheck}'`);
-            } else {
-                // apply each constraint to the property to check
-                namesOfConstraintsToApply.forEach(nameOfConstraint => {
-                    const constraintOptions = constraints[nameOfPropertyToCheck][nameOfConstraint];
-                    const propertyPath = `${parentPath}${parentPath ? '.' : ''}${nameOfPropertyToCheck}`;
+            // apply each constraint to the property to check
+            namesOfConstraintsToApply.forEach(nameOfConstraint => {
+                const constraintOptions = constraints[nameOfPropertyToCheck][nameOfConstraint];
+                const propertyPath = `${parentPath}${parentPath ? '.' : ''}${nameOfPropertyToCheck}`;
 
-                    if (nameOfConstraint === 'each') {
-                        const arrayValues = param[nameOfPropertyToCheck];
+                if (nameOfConstraint === 'each') {
+                    const arrayValues = param[nameOfPropertyToCheck];
 
-                        if (isArray(arrayValues)) {
-                            for (var i = 0; i < arrayValues.length; ++i) {
-                                walkConstraints(
-                                    `${propertyPath}[${i}]`,
-                                    arrayValues[i],
-                                    constraintOptions, // these are the subconstraints
-                                    result);
-                            }
-                        } else if (isDefined(arrayValues)) {
-                            result.push(`${propertyPath} is not an array`);
-                        }
-                    } else if (nameOfConstraint === 'object') {
-                        const value = param[nameOfPropertyToCheck];
-
-                        if (isObject(value) && !isArray(value)) {
+                    if (isArray(arrayValues)) {
+                        for (var i = 0; i < arrayValues.length; ++i) {
                             walkConstraints(
-                                propertyPath,
-                                value,
+                                `${propertyPath}[${i}]`,
+                                arrayValues[i],
                                 constraintOptions, // these are the subconstraints
                                 result);
-                        } else if (isDefined(value)) {
-                            result.push(propertyPath + ' is not an object');
                         }
-                    } else if (nameOfConstraint === 'dependency') {
-                        const value = param[nameOfPropertyToCheck];
-                        const attrs = param;
+                    } else if (isDefined(arrayValues)) {
+                        result.push(`${propertyPath} is not an array`);
+                    }
+                } else if (nameOfConstraint === 'object') {
+                    const value = param[nameOfPropertyToCheck];
 
-                        const dependencies = constraintOptions.length ?
-                            constraintOptions : [constraintOptions];
+                    if (isObject(value) && !isArray(value)) {
+                        walkConstraints(
+                            propertyPath,
+                            value,
+                            constraintOptions, // these are the subconstraints
+                            result);
+                    } else if (isDefined(value)) {
+                        result.push(propertyPath + ' is not an object');
+                    }
+                } else if (nameOfConstraint === 'dependency') {
+                    const value = param[nameOfPropertyToCheck];
+                    const attrs = param;
 
-                        for (let i = 0; i < dependencies.length; ++i) {
-                            const dependency = dependencies[i];
+                    const dependencies = constraintOptions.length ?
+                        constraintOptions : [constraintOptions];
 
-                            if (!dependency.test || dependency.test(value)) {
-                                if (!dependency.ensure(attrs, value)) {
-                                    result.push(`${propertyPath} dependency error${dependency.message ? ': ' : ''}${dependency.message || ''}`);
-                                    break;
-                                }
+                    for (let i = 0; i < dependencies.length; ++i) {
+                        const dependency = dependencies[i];
+
+                        if (!dependency.test || dependency.test(value)) {
+                            if (!dependency.ensure(attrs, value)) {
+                                result.push(`${propertyPath} dependency error${dependency.message ? ': ' : ''}${dependency.message || ''}`);
+                                break;
                             }
                         }
-                    } else {
-                        const value = param[nameOfPropertyToCheck];
-
-                        const errorMessage = testConstraint(
-                            nameOfConstraint, constraintOptions, value, nameOfPropertyToCheck);
-
-                        if (errorMessage) {
-                            result.push(`${parentPath}${parentPath ? '.' : ''}${errorMessage}`);
-                        }
                     }
-                });
-            }
+                } else {
+                    const value = param[nameOfPropertyToCheck];
+
+                    const errorMessage = testConstraint(
+                        nameOfConstraint, constraintOptions, value, nameOfPropertyToCheck);
+
+                    if (errorMessage) {
+                        result.push(`${parentPath}${parentPath ? '.' : ''}${errorMessage}`);
+                    }
+                }
+            });
         });
     }
 };

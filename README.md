@@ -5,7 +5,9 @@ Validation for API requests
 [![npm version](https://badge.fury.io/js/ensure-request.svg)](https://badge.fury.io/js/ensure-request)
 [![Codeship Status for stevejay/ensure-request](https://app.codeship.com/projects/9461ad60-a54a-0134-86a4-0675723f157f/status?branch=master)](https://app.codeship.com/projects/190833)
 [![Coverage Status](https://coveralls.io/repos/github/stevejay/ensure-request/badge.svg?branch=master)](https://coveralls.io/github/stevejay/ensure-request?branch=master)
-[![dependency status](https://david-dm.org/stevejay/ensure-request.svg)](https://david-dm.org/stevejay/ensure-request)
+[![bitHound Overall Score](https://www.bithound.io/github/stevejay/ensure-request/badges/score.svg)](https://www.bithound.io/github/stevejay/ensure-request)
+[![bitHound Dependencies](https://www.bithound.io/github/stevejay/ensure-request/badges/dependencies.svg)](https://www.bithound.io/github/stevejay/ensure-request/master/dependencies/npm)
+[![bitHound Dev Dependencies](https://www.bithound.io/github/stevejay/ensure-request/badges/devDependencies.svg)](https://www.bithound.io/github/stevejay/ensure-request/master/dependencies/npm)
 
 [![NPM](https://nodei.co/npm/ensure-request.png)](https://nodei.co/npm/ensure-request/)
 
