@@ -1,7 +1,7 @@
 'use strict';
 
-var ensure = require('../index.js').ensure;
-var should = require('should');
+const should = require('should'); // eslint-disable-line no-unused-vars
+const ensure = require('../index.js').ensure;
 
 describe('ensure', function() {
     describe('test not passing an object to object function', function() {
@@ -749,7 +749,7 @@ describe('ensure', function() {
                     a: {
                         dependency: { 
                             test: value => value === 1,
-                            ensure: (attrs, value) => attrs.b === 2
+                            ensure: attrs => attrs.b === 2
                         }
                     }
                 },
@@ -762,7 +762,7 @@ describe('ensure', function() {
                             a: {
                                 dependency: { 
                                     test: value => value === 1,
-                                    ensure: (attrs, value) => attrs.b === 999
+                                    ensure: attrs => attrs.b === 999
                                 }
                             }
                         }
@@ -777,7 +777,7 @@ describe('ensure', function() {
                             a: {
                                 dependency: { 
                                     test: value => value === 1,
-                                    ensure: (attrs, value) => attrs.b === 999,
+                                    ensure: attrs => attrs.b === 999,
                                     message: 'some message'
                                 }
                             }
@@ -791,7 +791,7 @@ describe('ensure', function() {
                     a: {
                         dependency: [{ 
                             test: value => value === 888,
-                            ensure: (attrs, value) => attrs.b === 999
+                            ensure: attrs => attrs.b === 999
                         }]
                     }
                 },
@@ -802,7 +802,7 @@ describe('ensure', function() {
                     a: {
                         dependency: { 
                             test: value => value === 1,
-                            ensure: (attrs, value) => attrs.b === 999
+                            ensure: attrs => attrs.b === 999
                         }
                     }
                 },
