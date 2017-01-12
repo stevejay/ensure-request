@@ -1,8 +1,12 @@
 'use strict';
 
-const ensure = (param, constraints) => {
+const ensure = (params, constraints, returnErrors) => {
     const result = [];
-    walkConstraints('', param, constraints, result);
+    walkConstraints('', params, constraints, result);
+
+    if (returnErrors) {
+        return result.length ? result : null;
+    }
 
     if (result.length) {
         throw new Error('[500] ' + result.join('; '));

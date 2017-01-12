@@ -937,6 +937,38 @@ describe('ensure', function() {
                 'Unknown constraint \'unknownConstraint\' specified');
         });
     });
+
+    describe('return errors', function() {
+        it('should return an error when params are invalid', function() {
+            const params = {
+                a: null
+            };
+
+            const constraint = {
+                a: {
+                    presence: true
+                }
+            };
+
+            const actual = ensure(params, constraint, true);
+            should(actual).eql(['a can\'t be blank']);
+        });
+
+        it('should not return an error when params are invalid', function() {
+            const params = {
+                a: 'foo'
+            };
+
+            const constraint = {
+                a: {
+                    presence: true
+                }
+            };
+
+            const actual = ensure(params, constraint, true);
+            should(actual).eql(null);
+        });
+    });
 });
 
 function runTests(tests) {
