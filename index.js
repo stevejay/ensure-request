@@ -9,7 +9,7 @@ const ensure = (params, constraints, returnErrors) => {
     }
 
     if (result.length) {
-        throw new Error('[500] ' + result.join('; '));
+        throw new Error('[400] ' + result.join('; '));
     }
 };
 

@@ -23,7 +23,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] a.b is not an object'
+                expected: '[400] a.b is not an object'
             },
             {
                 params: {
@@ -62,7 +62,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] a.b can\'t be blank'
+                expected: '[400] a.b can\'t be blank'
             },
             {
                 params: {
@@ -117,7 +117,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] a.b is not an object'
+                expected: '[400] a.b is not an object'
             }
         ];
 
@@ -143,7 +143,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] a.b is not an array'
+                expected: '[400] a.b is not an array'
             },
             {
                 params: {
@@ -174,7 +174,7 @@ describe('ensure', function() {
             {
                 params: { a: 1 },
                 constraints: { a: { string: true } },
-                expected: '[500] a is not a string'
+                expected: '[400] a is not a string'
             },
             {
                 params: {
@@ -195,7 +195,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] a.b.c is not a string'
+                expected: '[400] a.b.c is not a string'
             }
         ];
 
@@ -207,11 +207,11 @@ describe('ensure', function() {
             {
                 params: { a: [{ b: 999 }] },
                 constraints: { a: { each: { b: { string: true } } } },
-                expected: '[500] a[0].b is not a string'
+                expected: '[400] a[0].b is not a string'
             }, {
                 params: { a: [{ b: [{ c: 'string' }, { c: 999 }] }] },
                 constraints: { a: { each: { b: { each: { c: { string: true } } } } } },
-                expected: '[500] a[0].b[1].c is not a string'
+                expected: '[400] a[0].b[1].c is not a string'
             }
         ];
 
@@ -223,11 +223,11 @@ describe('ensure', function() {
             {
                 params: { a: [{ b: ['string', { }] }] },
                 constraints: { a: { each: { b: { each: { _value: { string: true } } } } } },
-                expected: '[500] a[0].b[1] is not a string'
+                expected: '[400] a[0].b[1] is not a string'
             }, {
                 params: { a: [ 1 ] },
                 constraints: { a: { each: { _value: { string: true } } } },
-                expected: '[500] a[0] is not a string'
+                expected: '[400] a[0] is not a string'
             }
         ];
 
@@ -239,7 +239,7 @@ describe('ensure', function() {
             {
                 params: { b: { } },
                 constraints: { a: { presence: true, string: true } },
-                expected: '[500] a can\'t be blank'
+                expected: '[400] a can\'t be blank'
             }
         ];
 
@@ -267,7 +267,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { string: true } },
-                expected: '[500] someVar is not a string'
+                expected: '[400] someVar is not a string'
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { string: false } },
@@ -295,11 +295,11 @@ describe('ensure', function() {
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { presence: true } },
-                expected: '[500] someVar can\'t be blank'
+                expected: '[400] someVar can\'t be blank'
             }, {
                 params: { someVar: undefined },
                 constraints: { someVar: { presence: true } },
-                expected: '[500] someVar can\'t be blank'
+                expected: '[400] someVar can\'t be blank'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { presence: false } },
@@ -327,15 +327,15 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'hello' },
                 constraints: { someVar: { email: true } },
-                expected: '[500] someVar is not a valid email'
+                expected: '[400] someVar is not a valid email'
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { email: true } },
-                expected: '[500] someVar is not a valid email'
+                expected: '[400] someVar is not a valid email'
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { email: true } },
-                expected: '[500] someVar is not a valid email'
+                expected: '[400] someVar is not a valid email'
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { email: false } },
@@ -367,11 +367,11 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'steve@test.com' },
                 constraints: { someVar: { url: true } },
-                expected: '[500] someVar is not a valid url'
+                expected: '[400] someVar is not a valid url'
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { url: true } },
-                expected: '[500] someVar is not a valid url'
+                expected: '[400] someVar is not a valid url'
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { url: false } },
@@ -379,7 +379,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { url: true } },
-                expected: '[500] someVar is not a valid url'
+                expected: '[400] someVar is not a valid url'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { url: true } },
@@ -403,15 +403,15 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'steve@test.com' },
                 constraints: { someVar: { date: true } },
-                expected: '[500] someVar is not an instance of Date'
+                expected: '[400] someVar is not an instance of Date'
             }, {
                 params: { someVar: 789 },
                 constraints: { someVar: { date: true } },
-                expected: '[500] someVar is not an instance of Date'
+                expected: '[400] someVar is not an instance of Date'
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { date: true } },
-                expected: '[500] someVar is not an instance of Date'
+                expected: '[400] someVar is not an instance of Date'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { date: true } },
@@ -439,7 +439,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 4.12 },
                 constraints: { someVar: { numericality: { pattern: /^\d\.\d$/ } } },
-                expected: '[500] someVar has wrong format'
+                expected: '[400] someVar has wrong format'
             }, {
                 params: { someVar: 4 },
                 constraints: { someVar: { numericality: {
@@ -450,7 +450,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 4 },
                 constraints: { someVar: { numericality: { greaterThan: 4 } } },
-                expected: '[500] someVar is not greater than 4'
+                expected: '[400] someVar is not greater than 4'
             }, {
                 params: { someVar: 4 },
                 constraints: { someVar: { numericality: { greaterThanOrEqualTo: 4 } } },
@@ -458,7 +458,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 3 },
                 constraints: { someVar: { numericality: { greaterThanOrEqualTo: 4 } } },
-                expected: '[500] someVar is not greater than or equal to 4'
+                expected: '[400] someVar is not greater than or equal to 4'
             }, {
                 params: { someVar: 2 },
                 constraints: { someVar: { numericality: { lessThan: 3 } } },
@@ -466,7 +466,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 3 },
                 constraints: { someVar: { numericality: { lessThan: 3 } } },
-                expected: '[500] someVar is not less than 3'
+                expected: '[400] someVar is not less than 3'
             }, {
                 params: { someVar: 3 },
                 constraints: { someVar: { numericality: false } },
@@ -478,7 +478,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 4 },
                 constraints: { someVar: { numericality: { lessThanOrEqualTo: 3 } } },
-                expected: '[500] someVar is not less than or equal to 3'
+                expected: '[400] someVar is not less than or equal to 3'
             }, {
                 params: { someVar: undefined },
                 constraints: { someVar: { numericality: { greaterThan: 3 } } },
@@ -494,7 +494,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 4.01 },
                 constraints: { someVar: { numericality: { onlyInteger: true } } },
-                expected: '[500] someVar is not an integer'
+                expected: '[400] someVar is not an integer'
             }, {
                 params: { someVar: '4' },
                 constraints: { someVar: { numericality: { greaterThan: 3 } } },
@@ -522,7 +522,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { inclusion: { within: ['a', 'b'] } } },
-                expected: '[500] someVar is not included in the list'
+                expected: '[400] someVar is not included in the list'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { inclusion: { within: ['a', 'b'] } } },
@@ -534,11 +534,11 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'c' },
                 constraints: { someVar: { inclusion: { within: ['a', 'b'] } } },
-                expected: '[500] someVar is not included in the list'
+                expected: '[400] someVar is not included in the list'
             }, {
                 params: { someVar: 'c' },
                 constraints: { someVar: { inclusion: ['a', 'b'] } },
-                expected: '[500] someVar is not included in the list'
+                expected: '[400] someVar is not included in the list'
             }, {
                 params: { someVar: 'c' },
                 constraints: { someVar: { inclusion: false } },
@@ -566,19 +566,19 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'b' },
                 constraints: { someVar: { format: { pattern: '\\d' } } },
-                expected: '[500] someVar is in wrong format'
+                expected: '[400] someVar is in wrong format'
             }, {
                 params: { someVar: 'b' },
                 constraints: { someVar: { format: { pattern: /^\d$/ } } },
-                expected: '[500] someVar is in wrong format'
+                expected: '[400] someVar is in wrong format'
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { format: { pattern: '\\d' } } },
-                expected: '[500] someVar is in wrong format'
+                expected: '[400] someVar is in wrong format'
             }, {
                 params: { someVar: '1a' },
                 constraints: { someVar: { format: { pattern: '\\d' } } },
-                expected: '[500] someVar is in wrong format'
+                expected: '[400] someVar is in wrong format'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { format: { pattern: '\\d' } } },
@@ -590,7 +590,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'A' },
                 constraints: { someVar: { format: { pattern: 'a' } } },
-                expected: '[500] someVar is in wrong format'
+                expected: '[400] someVar is in wrong format'
             }, {
                 params: { someVar: 'A' },
                 constraints: { someVar: { format: { pattern: 'a', flags: 'i' } } },
@@ -622,11 +622,11 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 999 },
                 constraints: { someVar: { array: true } },
-                expected: '[500] someVar is not an array'
+                expected: '[400] someVar is not an array'
             }, {
                 params: { someVar: 'foo' },
                 constraints: { someVar: { array: true } },
-                expected: '[500] someVar is not an array'
+                expected: '[400] someVar is not an array'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { array: true } },
@@ -658,7 +658,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { bool: true } },
-                expected: '[500] someVar is not boolean'
+                expected: '[400] someVar is not boolean'
             }, {
                 params: { someVar: '' },
                 constraints: { someVar: { bool: false } },
@@ -666,7 +666,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'true' },
                 constraints: { someVar: { bool: true } },
-                expected: '[500] someVar is not boolean'
+                expected: '[400] someVar is not boolean'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { bool: true } },
@@ -702,19 +702,19 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'four' },
                 constraints: { someVar: { length: { minimum: 5 } } },
-                expected: '[500] someVar is too short (minimum length is 5)'
+                expected: '[400] someVar is too short (minimum length is 5)'
             }, {
                 params: { someVar: 'four' },
                 constraints: { someVar: { length: { maximum: 3 } } },
-                expected: '[500] someVar is too long (maximum length is 3)'
+                expected: '[400] someVar is too long (maximum length is 3)'
             }, {
                 params: { someVar: [1,2,3,4] },
                 constraints: { someVar: { length: { minimum: 5 } } },
-                expected: '[500] someVar is too short (minimum length is 5)'
+                expected: '[400] someVar is too short (minimum length is 5)'
             }, {
                 params: { someVar: [1,2,3,4] },
                 constraints: { someVar: { length: { maximum: 3 } } },
-                expected: '[500] someVar is too long (maximum length is 3)'
+                expected: '[400] someVar is too long (maximum length is 3)'
             }, {
                 params: { someVar: [1,2,3,4] },
                 constraints: { someVar: { length: false } },
@@ -726,7 +726,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '1' },
                 constraints: { someVar: { length: { exactly: 0 } } },
-                expected: '[500] someVar has length that is not exactly 0'
+                expected: '[400] someVar has length that is not exactly 0'
             }, {
                 params: { someVar: null },
                 constraints: { someVar: { length: { minimum: 4 } } },
@@ -768,7 +768,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] foo.a dependency error'
+                expected: '[400] foo.a dependency error'
             }, {
                 params: { foo: { a: 1, b: 2 } },
                 constraints: {
@@ -784,7 +784,7 @@ describe('ensure', function() {
                         }
                     }
                 },
-                expected: '[500] foo.a dependency error: some message'
+                expected: '[400] foo.a dependency error: some message'
             }, {
                 params: { a: 1, b: 2 },
                 constraints: {
@@ -826,11 +826,11 @@ describe('ensure', function() {
             }, {
                 params: { someArray: [1,2,2] },
                 constraints: { someArray: { ordered: (current, next) => next > current } },
-                expected: '[500] someArray is not ordered'
+                expected: '[400] someArray is not ordered'
             }, {
                 params: { someArray: [{a: 1}, {a: 1}] },
                 constraints: { someArray: { ordered: (current, next) => next.a > current.a } },
-                expected: '[500] someArray is not ordered'
+                expected: '[400] someArray is not ordered'
             }, {
                 params: { someArray: [{a: 1}] },
                 constraints: { someArray: { ordered: (current, next) => next.a > current.a } },
@@ -870,7 +870,7 @@ describe('ensure', function() {
             }, {
                 params: { someVar: 'foo' },
                 constraints: { someVar: { uuid: true } },
-                expected: '[500] someVar is not a UUID'
+                expected: '[400] someVar is not a UUID'
             }, {
                 params: { someVar: 'foo' },
                 constraints: { someVar: { uuid: false } },
@@ -898,11 +898,11 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '3.5' },
                 constraints: { someVar: { number: true } },
-                expected: '[500] someVar is not a number'
+                expected: '[400] someVar is not a number'
             }, {
                 params: { someVar: 'foo' },
                 constraints: { someVar: { number: true } },
-                expected: '[500] someVar is not a number'
+                expected: '[400] someVar is not a number'
             }, {
                 params: { someVar: 'foo' },
                 constraints: { someVar: { number: false } },
