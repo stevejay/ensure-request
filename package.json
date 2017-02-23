@@ -20,15 +20,16 @@
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
+    "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "eslint": "^3.12.2",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "mocha-lcov-reporter": "^1.2.0",
-    "should": "^11.1.1"
+    "mocha-lcov-reporter": "^1.2.0"
   },
   "keywords": [
     "validation",
     "request"
-  ]
+  ],
+  "dependencies": {}
 }

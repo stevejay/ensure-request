@@ -1,15 +1,22 @@
 'use strict';
 
 const ensure = (params, constraints, returnErrors) => {
-    const result = [];
+    const result = {};
+
     walkConstraints('', params, constraints, result);
 
-    if (returnErrors) {
-        return result.length ? result : null;
-    }
+    const hasErrors = Object.keys(result).length > 0;
 
-    if (result.length) {
-        throw new Error('[400] ' + result.join('; '));
+    if (returnErrors) {
+        return hasErrors ? result : null;
+    } else if (hasErrors) {
+        const errors = [];
+
+        Object.keys(result)
+            .forEach(key => result[key]
+            .forEach(error => errors.push(error)));
+
+        throw new Error('[400] ' + errors.join('; '));
     }
 };
 
@@ -46,16 +53,22 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                                     namesOfConstraints[j],
                                     constraintOptions[namesOfConstraints[j]],
                                     arrayValues[i],
-                                    `${propertyPath}[${i}]`);
+                                    `${nameOfPropertyToCheck}[${i}]`);
 
                                 if (errorMessage) {
-                                    result.push(`${errorMessage}`);
+                                    addErrorToResult(
+                                        result,
+                                        `${propertyPath}[${i}]`,
+                                        errorMessage);
                                 }
                             }
                         }
                     }
                 } else if (isDefined(arrayValues)) {
-                    throw new Error(`[400] ${propertyPath} is not an array`);
+                    addErrorToResult(
+                        result,
+                        propertyPath,
+                        nameOfPropertyToCheck + ' is not an array');
                 }
             } else if (nameOfConstraint === 'object') {
                 const value = param[nameOfPropertyToCheck];
@@ -67,7 +80,10 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                         constraintOptions, // these are the subconstraints
                         result);
                 } else if (isDefined(value)) {
-                    result.push(propertyPath + ' is not an object');
+                    addErrorToResult(
+                        result,
+                        propertyPath,
+                        nameOfPropertyToCheck + ' is not an object');
                 }
             } else if (nameOfConstraint === 'dependency') {
                 const value = param[nameOfPropertyToCheck];
@@ -81,7 +97,10 @@ const walkConstraints = (parentPath, param, constraints, result) => {
 
                     if (!dependency.test || dependency.test(value)) {
                         if (!dependency.ensure(attrs, value)) {
-                            result.push(`${propertyPath} dependency error${dependency.message ? ': ' : ''}${dependency.message || ''}`);
+                            const message = dependency.message ||
+                                nameOfPropertyToCheck + ' dependency error';
+
+                            addErrorToResult(result, propertyPath, message);
                             break;
                         }
                     }
@@ -90,15 +109,29 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                 const value = param[nameOfPropertyToCheck];
 
                 const errorMessage = testConstraint(
-                    nameOfConstraint, constraintOptions, value, nameOfPropertyToCheck);
+                    nameOfConstraint,
+                    constraintOptions,
+                    value,
+                    nameOfPropertyToCheck);
 
                 if (errorMessage) {
-                    result.push(`${parentPath}${parentPath ? '.' : ''}${errorMessage}`);
+                    addErrorToResult(
+                        result,
+                        `${parentPath}${parentPath ? '.' : ''}${nameOfPropertyToCheck}`,
+                        errorMessage);
                 }
             }
         });
     });
 };
+
+function addErrorToResult(result, path, message) {
+    if (!result[path]) {
+        result[path] = [];
+    }
+
+    result[path].push(message);
+}
 
 function testConstraint(name, options, value, valueName) {
     const constraint = validators[name];
@@ -174,7 +207,7 @@ const validators = {
     ),
     format: (value, options) => {
         if (!options || !isDefined(value)) { return null; }
-        return testFormat(options.pattern || options, options.flags, value) ? null : options.message || '[var] is in wrong format';
+        return testFormat(options.pattern || options, options.flags, value) ? null : options.message || '[var] is in the wrong format';
     },
     array: (value, options) => (
         !options || !isDefined(value) || isArray(value) ? null : options.message || '[var] is not an array'
