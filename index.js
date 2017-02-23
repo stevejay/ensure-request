@@ -1,5 +1,7 @@
 'use strict';
 
+const startCase = require('lodash.startcase'); 
+
 const ensure = (params, constraints, returnErrors) => {
     const result = {};
 
@@ -68,7 +70,7 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                     addErrorToResult(
                         result,
                         propertyPath,
-                        nameOfPropertyToCheck + ' is not an array');
+                        startCase(nameOfPropertyToCheck) + ' is not an array');
                 }
             } else if (nameOfConstraint === 'object') {
                 const value = param[nameOfPropertyToCheck];
@@ -83,7 +85,7 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                     addErrorToResult(
                         result,
                         propertyPath,
-                        nameOfPropertyToCheck + ' is not an object');
+                        startCase(nameOfPropertyToCheck) + ' is not an object');
                 }
             } else if (nameOfConstraint === 'dependency') {
                 const value = param[nameOfPropertyToCheck];
@@ -97,8 +99,9 @@ const walkConstraints = (parentPath, param, constraints, result) => {
 
                     if (!dependency.test || dependency.test(value)) {
                         if (!dependency.ensure(attrs, value)) {
-                            const message = dependency.message ||
-                                nameOfPropertyToCheck + ' dependency error';
+                            const message =
+                                dependency.message ||
+                                startCase(nameOfPropertyToCheck) + ' dependency error';
 
                             addErrorToResult(result, propertyPath, message);
                             break;
@@ -143,7 +146,7 @@ function testConstraint(name, options, value, valueName) {
     let errorMessage = constraint(value, options);
 
     if (errorMessage) {
-        errorMessage = errorMessage.replace(/\[var\]/, valueName);
+        errorMessage = errorMessage.replace(/\[var\]/, startCase(valueName));
         return errorMessage.trim();
     }
 

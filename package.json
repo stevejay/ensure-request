@@ -31,5 +31,7 @@
     "validation",
     "request"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "lodash.startcase": "^4.4.0"
+  }
 }
