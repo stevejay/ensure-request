@@ -273,6 +273,15 @@ describe('ensure', function() {
                     }
                 },
                 expected: '[400] a[0] is not a string'
+            },
+            {
+                params: { a: [ 'Director' ] },
+                constraints: {
+                    a: {
+                        each: { format: /^\w.+\w$/ }
+                    }
+                },
+                expected: null
             }
         ];
 
@@ -607,6 +616,10 @@ describe('ensure', function() {
             }, {
                 params: { someVar: '1' },
                 constraints: { someVar: { format: '\\d' } },
+                expected: null
+            }, {
+                params: { someVar: 'Director' },
+                constraints: { someVar: { format: /^\w.+\w$/ } },
                 expected: null
             }, {
                 params: { someVar: 'b' },

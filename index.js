@@ -44,7 +44,7 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                             for (j = 0; j < namesOfConstraints.length; ++j) {
                                 const errorMessage = testConstraint(
                                     namesOfConstraints[j],
-                                    constraintOptions,
+                                    constraintOptions[namesOfConstraints[j]],
                                     arrayValues[i],
                                     `${propertyPath}[${i}]`);
 
