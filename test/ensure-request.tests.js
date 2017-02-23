@@ -124,7 +124,7 @@ describe('ensure', function() {
         runTests(tests);
     });
 
-    describe('test not passing an object to each function', function() {
+    describe('test not passing an object to the each function', function() {
         const tests = [
             {
                 params: {
@@ -137,7 +137,9 @@ describe('ensure', function() {
                         object: {
                             b: {
                                 each: {
-                                    c: { string: true }
+                                    object: {
+                                        c: { string: true }
+                                    }
                                 }
                             }
                         }
@@ -156,7 +158,9 @@ describe('ensure', function() {
                         object: {
                             b: {
                                 each: {
-                                    c: { string: true }
+                                    object: {
+                                        c: { string: true }
+                                    }
                                 }
                             }
                         }
@@ -206,11 +210,33 @@ describe('ensure', function() {
         const tests = [
             {
                 params: { a: [{ b: 999 }] },
-                constraints: { a: { each: { b: { string: true } } } },
+                constraints: {
+                    a: {
+                        each: {
+                            object: {
+                                b: { string: true }
+                            }
+                        }
+                    }
+                },
                 expected: '[400] a[0].b is not a string'
             }, {
                 params: { a: [{ b: [{ c: 'string' }, { c: 999 }] }] },
-                constraints: { a: { each: { b: { each: { c: { string: true } } } } } },
+                constraints: {
+                    a: {
+                        each: {
+                            object: {
+                                b: {
+                                    each: {
+                                        object: {
+                                            c: { string: true }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 expected: '[400] a[0].b[1].c is not a string'
             }
         ];
@@ -221,12 +247,31 @@ describe('ensure', function() {
     describe('test deep arrays of values', function() {
         const tests = [
             {
-                params: { a: [{ b: ['string', { }] }] },
-                constraints: { a: { each: { b: { each: { _value: { string: true } } } } } },
+                params: {
+                    a: [
+                        { b: ['string', {}] }
+                    ]
+                },
+                constraints: {
+                    a: {
+                        each: {
+                            object: {
+                                b: {
+                                    each: { string: true }
+                                }
+                            }
+                        }
+                    }
+                },
                 expected: '[400] a[0].b[1] is not a string'
-            }, {
+            },
+            {
                 params: { a: [ 1 ] },
-                constraints: { a: { each: { _value: { string: true } } } },
+                constraints: {
+                    a: {
+                        each: { string: true }
+                    }
+                },
                 expected: '[400] a[0] is not a string'
             }
         ];

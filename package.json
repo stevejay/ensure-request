@@ -1,9 +1,6 @@
 {
   "name": "ensure-request",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/stevejay/ensure-request"
-  },
+  "repository": "https://github.com/stevejay/ensure-request",
   "version": "1.2.0",
   "engines": {
     "node": ">=4.3"
@@ -12,15 +9,12 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --growl --recursive",
-    "posttest": "npm run lint",
+    "posttest": "yarn run lint",
     "lint": "eslint .",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "prepublish": "npm test"
+    "prepublish": "yarn test"
   },
-  "author": {
-    "name": "Steve Johns",
-    "email": "steve@stevejay.net"
-  },
+  "author": "Steve Johns <steve@stevejay.net>",
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^2.11.15",

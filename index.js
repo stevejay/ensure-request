@@ -13,91 +13,91 @@ const ensure = (params, constraints, returnErrors) => {
     }
 };
 
-const PRIMITIVE_VALUE_FLAG = '_value';
-
 const walkConstraints = (parentPath, param, constraints, result) => {
     const namesOfPropertiesToCheck = Object.keys(constraints);
 
-    if (namesOfPropertiesToCheck.indexOf(PRIMITIVE_VALUE_FLAG) > -1) {
-        // We're checking a primitive value, not the property of an object.
+    namesOfPropertiesToCheck.forEach(nameOfPropertyToCheck => {
+        const namesOfConstraintsToApply = Object.keys(constraints[nameOfPropertyToCheck]);
 
-        const namesOfConstraintsToApply = Object.keys(constraints[PRIMITIVE_VALUE_FLAG]);
-
+        // apply each constraint to the property to check
         namesOfConstraintsToApply.forEach(nameOfConstraint => {
-            const constraintOptions = constraints[PRIMITIVE_VALUE_FLAG][nameOfConstraint];
-            
-            const errorMessage = testConstraint(
-                nameOfConstraint, constraintOptions, param, '');
+            const constraintOptions = constraints[nameOfPropertyToCheck][nameOfConstraint];
+            const propertyPath = `${parentPath}${parentPath ? '.' : ''}${nameOfPropertyToCheck}`;
+            var i, j;
 
-            if (errorMessage) {
-                result.push(`${parentPath} ${errorMessage}`);
-            }
-        });
-    } else {
-        namesOfPropertiesToCheck.forEach(nameOfPropertyToCheck => {
-            const namesOfConstraintsToApply = Object.keys(constraints[nameOfPropertyToCheck]);
+            if (nameOfConstraint === 'each') {
+                const arrayValues = param[nameOfPropertyToCheck];
 
-            // apply each constraint to the property to check
-            namesOfConstraintsToApply.forEach(nameOfConstraint => {
-                const constraintOptions = constraints[nameOfPropertyToCheck][nameOfConstraint];
-                const propertyPath = `${parentPath}${parentPath ? '.' : ''}${nameOfPropertyToCheck}`;
+                var namesOfConstraints = Object.keys(constraintOptions);
 
-                if (nameOfConstraint === 'each') {
-                    const arrayValues = param[nameOfPropertyToCheck];
-
-                    if (isArray(arrayValues)) {
-                        for (var i = 0; i < arrayValues.length; ++i) {
+                if (isArray(arrayValues)) {
+                    if (namesOfConstraints.indexOf('object') > -1) {
+                        for (i = 0; i < arrayValues.length; ++i) {
                             walkConstraints(
                                 `${propertyPath}[${i}]`,
                                 arrayValues[i],
-                                constraintOptions, // these are the subconstraints
+                                constraintOptions.object,
                                 result);
                         }
-                    } else if (isDefined(arrayValues)) {
-                        result.push(`${propertyPath} is not an array`);
-                    }
-                } else if (nameOfConstraint === 'object') {
-                    const value = param[nameOfPropertyToCheck];
+                    } else {
+                        for (i = 0; i < arrayValues.length; ++i) {
+                            for (j = 0; j < namesOfConstraints.length; ++j) {
+                                const errorMessage = testConstraint(
+                                    namesOfConstraints[j],
+                                    constraintOptions,
+                                    arrayValues[i],
+                                    `${propertyPath}[${i}]`);
 
-                    if (isObject(value) && !isArray(value)) {
-                        walkConstraints(
-                            propertyPath,
-                            value,
-                            constraintOptions, // these are the subconstraints
-                            result);
-                    } else if (isDefined(value)) {
-                        result.push(propertyPath + ' is not an object');
-                    }
-                } else if (nameOfConstraint === 'dependency') {
-                    const value = param[nameOfPropertyToCheck];
-                    const attrs = param;
-
-                    const dependencies = constraintOptions.length ?
-                        constraintOptions : [constraintOptions];
-
-                    for (let i = 0; i < dependencies.length; ++i) {
-                        const dependency = dependencies[i];
-
-                        if (!dependency.test || dependency.test(value)) {
-                            if (!dependency.ensure(attrs, value)) {
-                                result.push(`${propertyPath} dependency error${dependency.message ? ': ' : ''}${dependency.message || ''}`);
-                                break;
+                                if (errorMessage) {
+                                    result.push(`${errorMessage}`);
+                                }
                             }
                         }
                     }
-                } else {
-                    const value = param[nameOfPropertyToCheck];
+                } else if (isDefined(arrayValues)) {
+                    throw new Error(`[400] ${propertyPath} is not an array`);
+                }
+            } else if (nameOfConstraint === 'object') {
+                const value = param[nameOfPropertyToCheck];
 
-                    const errorMessage = testConstraint(
-                        nameOfConstraint, constraintOptions, value, nameOfPropertyToCheck);
+                if (isObject(value) && !isArray(value)) {
+                    walkConstraints(
+                        propertyPath,
+                        value,
+                        constraintOptions, // these are the subconstraints
+                        result);
+                } else if (isDefined(value)) {
+                    result.push(propertyPath + ' is not an object');
+                }
+            } else if (nameOfConstraint === 'dependency') {
+                const value = param[nameOfPropertyToCheck];
+                const attrs = param;
 
-                    if (errorMessage) {
-                        result.push(`${parentPath}${parentPath ? '.' : ''}${errorMessage}`);
+                const dependencies = constraintOptions.length ?
+                    constraintOptions : [constraintOptions];
+
+                for (let i = 0; i < dependencies.length; ++i) {
+                    const dependency = dependencies[i];
+
+                    if (!dependency.test || dependency.test(value)) {
+                        if (!dependency.ensure(attrs, value)) {
+                            result.push(`${propertyPath} dependency error${dependency.message ? ': ' : ''}${dependency.message || ''}`);
+                            break;
+                        }
                     }
                 }
-            });
+            } else {
+                const value = param[nameOfPropertyToCheck];
+
+                const errorMessage = testConstraint(
+                    nameOfConstraint, constraintOptions, value, nameOfPropertyToCheck);
+
+                if (errorMessage) {
+                    result.push(`${parentPath}${parentPath ? '.' : ''}${errorMessage}`);
+                }
+            }
         });
-    }
+    });
 };
 
 function testConstraint(name, options, value, valueName) {
