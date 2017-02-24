@@ -807,7 +807,7 @@ describe('ensure', function() {
                     a: {
                         dependency: { 
                             test: value => value === 1,
-                            ensure: attrs => attrs.b === 2
+                            ensure: (_, attrs) => attrs.b === 2
                         }
                     }
                 },
@@ -820,7 +820,7 @@ describe('ensure', function() {
                             a: {
                                 dependency: { 
                                     test: value => value === 1,
-                                    ensure: attrs => attrs.b === 999
+                                    ensure: (_, attrs) => attrs.b === 999
                                 }
                             }
                         }
@@ -835,7 +835,7 @@ describe('ensure', function() {
                             a: {
                                 dependency: { 
                                     test: value => value === 1,
-                                    ensure: attrs => attrs.b === 999,
+                                    ensure: (_, attrs) => attrs.b === 999,
                                     message: 'some message'
                                 }
                             }
@@ -849,7 +849,7 @@ describe('ensure', function() {
                     a: {
                         dependency: [{ 
                             test: value => value === 888,
-                            ensure: attrs => attrs.b === 999
+                            ensure: (_, attrs) => attrs.b === 999
                         }]
                     }
                 },
@@ -860,8 +860,67 @@ describe('ensure', function() {
                     a: {
                         dependency: { 
                             test: value => value === 1,
-                            ensure: attrs => attrs.b === 999
+                            ensure: (_, attrs) => attrs.b === 999
                         }
+                    }
+                },
+                expected: null
+            }, {
+                params: { a: 1, b: 2 },
+                constraints: {
+                    a: {
+                        dependency: [{ 
+                            test: (_, attrs) => attrs.b === 2,
+                            ensure: (_, attrs) => attrs.a === 55,
+                            message: 'some message'
+                        }]
+                    }
+                },
+                expected: { 'a': ['some message'] }
+            }, {
+                params: { a: 1, b: 2 },
+                constraints: {
+                    a: {
+                        dependency: [{ 
+                            test: (_, attrs) => attrs.b === 10,
+                            ensure: (_, attrs) => attrs.a === 55,
+                            message: 'some message'
+                        }]
+                    }
+                },
+                expected: null
+            }, {
+                params: { a: 1, b: 2 },
+                constraints: {
+                    a: {
+                        dependency: [{ 
+                            test: (_, attrs) => attrs.b === 2,
+                            ensure: value => value === 55,
+                            message: 'some message'
+                        }]
+                    }
+                },
+                expected: { 'a': ['some message'] }
+            }, {
+                params: { a: 1, b: 2 },
+                constraints: {
+                    a: {
+                        dependency: [{ 
+                            test: (_, attrs) => attrs.b === 10,
+                            ensure: value => value === 55,
+                            message: 'some message'
+                        }]
+                    }
+                },
+                expected: null
+            }, {
+                params: { a: 1, b: 2 },
+                constraints: {
+                    a: {
+                        dependency: [{ 
+                            ensure: value => value === 1,
+                            message: 'some message'
+                        }]
                     }
                 },
                 expected: null

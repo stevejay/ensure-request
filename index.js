@@ -97,8 +97,8 @@ const walkConstraints = (parentPath, param, constraints, result) => {
                 for (let i = 0; i < dependencies.length; ++i) {
                     const dependency = dependencies[i];
 
-                    if (!dependency.test || dependency.test(value)) {
-                        if (!dependency.ensure(attrs, value)) {
+                    if (!dependency.test || dependency.test(value, attrs)) {
+                        if (!dependency.ensure(value, attrs)) {
                             const message =
                                 dependency.message ||
                                 startCase(nameOfPropertyToCheck) + ' dependency error';
