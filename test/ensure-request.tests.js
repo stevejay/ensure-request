@@ -362,7 +362,63 @@ describe('ensure', function() {
                 params: { someVar: undefined },
                 constraints: { someVar: { presence: false } },
                 expected: null
+            },
+            
+            {
+                params: { someVar: 'hello ' },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: null
+            }, {
+                params: { someVar: 789 },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: null
+            }, {
+                params: { someVar: '' },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: null
+            }, {
+                params: { someVar: [] },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: null
+            }, {
+                params: { someVar: null },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
+            }, {
+                params: { someVar: undefined },
+                constraints: { someVar: { presence: { disallowEmpty: false } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
+            },
+
+            {
+                params: { someVar: 'hello ' },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: null
+            }, {
+                params: { someVar: 789 },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: null
+            }, {
+                params: { someVar: '' },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
+            }, {
+                params: { someVar: [] },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
+            }, 
+            
+            
+            {
+                params: { someVar: null },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
+            }, {
+                params: { someVar: undefined },
+                constraints: { someVar: { presence: { disallowEmpty: true } } },
+                expected: { someVar: ['Some Var can\'t be blank'] }
             }
+
         ];
 
         runTests(tests);

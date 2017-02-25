@@ -200,9 +200,17 @@ const validators = {
     number: (value, options) => (
         !options || !isDefined(value) || isNumber(value) ? null : options.message || '[var] is not a number'
     ),
-    presence: (value, options) => (
-        !options || isDefined(value) ? null : options.message || '[var] can\'t be blank'
-    ),
+    presence: (value, options) => {
+        if (!options) {
+            return null;
+        }
+
+        if ((options.disallowEmpty &&
+            (value === '' || (isArray(value) && value.length === 0))) ||
+            !isDefined(value)) {
+            return options.message || '[var] can\'t be blank';
+        }
+    },
     inclusion: (value, options) => (
         !options || !isDefined(value) || (options.within || options || []).indexOf(value) > -1 ?
             null :
