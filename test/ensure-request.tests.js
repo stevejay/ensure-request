@@ -1123,11 +1123,11 @@ describe('ensure', function() {
                 }
             };
 
-            const actual = ensure(params, constraint, true);
+            const actual = ensure(params, constraint);
             expect(actual).to.eql({ a: ['A can\'t be blank'] });
         });
 
-        it('should not return an error when params are invalid', function() {
+        it('should not return an error when params are valid', function() {
             const params = {
                 a: 'foo'
             };
@@ -1138,8 +1138,50 @@ describe('ensure', function() {
                 }
             };
 
-            const actual = ensure(params, constraint, true);
+            const actual = ensure(params, constraint);
             expect(actual).to.eql(null);
+        });
+    });
+
+    describe('pass error handler', function() {
+        it('should invoke the error handler when params are invalid', () => {
+            const params = {
+                a: null
+            };
+
+            const constraint = {
+                a: {
+                    presence: true
+                }
+            };
+
+            let errorHandlerInvoked = false;
+
+            ensure(params, constraint, () => {
+                errorHandlerInvoked = true;
+            });
+
+            expect(errorHandlerInvoked).to.eql(true);
+        });
+
+        it('should not invoke the error handler when params are valid', function() {
+            const params = {
+                a: 'foo'
+            };
+
+            const constraint = {
+                a: {
+                    presence: true
+                }
+            };
+
+            let errorHandlerInvoked = false;
+
+            ensure(params, constraint, () => {
+                errorHandlerInvoked = true;
+            });
+
+            expect(errorHandlerInvoked).to.eql(false);
         });
     });
 });
@@ -1147,7 +1189,7 @@ describe('ensure', function() {
 function runTests(tests) {
     tests.forEach(test => {
         it('should return ' + JSON.stringify(test.expected) + ' for constraints ' + JSON.stringify(test.constraints) + ' and params ' + JSON.stringify(test.params), () => {
-            const actual = ensure(test.params, test.constraints, true);
+            const actual = ensure(test.params, test.constraints);
             expect(actual).to.eql(test.expected);
         });
     });

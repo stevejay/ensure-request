@@ -6,9 +6,9 @@
     "node": ">=4.3"
   },
   "description": "Validation for API requests",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "babel -d lib index.js",
+    "build": "babel -d dist index.js && babel -d dist/src src",
     "test": "NODE_ENV=test mocha --growl --recursive",
     "posttest": "yarn run lint",
     "lint": "eslint .",

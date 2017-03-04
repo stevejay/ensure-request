@@ -33,7 +33,11 @@ const request = {
     name: 123
 };
 
-ensure(request, constraint); // throws an Error exception on name
+// You can get a return value...
+const errors = ensure(request, constraint); // null if no errors, an object of errors if not
+
+// ... or pass an error handler function.
+ensure(request, constraint, errors => { /* do what you like here, like throw */});
 ```
 
 ## API
